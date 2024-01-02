@@ -15,7 +15,8 @@ http
   .listen("3000", () => console.log("라우터를 만들어보자!"));
 
 const user = (req, res) => {
-  res.end(`[user] name : andy, age: 30`);
+  const userInfo = url.parse(req.url, true).query;
+  res.end(`[user] name : ${userInfo.name}, age: ${userInfo.age}`);
 };
 
 const feed = (req, res) => {
