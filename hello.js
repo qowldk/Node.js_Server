@@ -1,22 +1,29 @@
 const http = require("http");
 const url = require("url");
+
 http
   .createServer((req, res) => {
     const path = url.parse(req.url, true).pathname;
     res.setHeader("Content-Type", "text/html");
-    if (path === "/user") {
-      user(req, res); // 1
-    } else if (path === "/feed") {
-      feed(req, res); // 2
+    if (path in urlMap) {
+      // 1
+      try {
+        urlMap[path](req, res);
+      } catch (err) {
+        console.log(err);
+        serverError(req, res);
+      }
+      // 2
     } else {
-      notFound(req, res); // 3
+      notFound(req, res);
     }
   })
-  .listen("3000", () => console.log("라우터를 만들어보자!"));
+  .listen("3000", () => console.log("라우터를 리팩토링해보자!"));
 
 const user = (req, res) => {
-  const userInfo = url.parse(req.url, true).query;
-  res.end(`[user] name : ${userInfo.name}, age: ${userInfo.age}`);
+  throw Error("!!!");
+  const user = url.parse(req.url, true).query;
+  res.end(`[user] name : ${user.name}, age: ${user.age}`);
 };
 
 const feed = (req, res) => {
@@ -31,4 +38,16 @@ const feed = (req, res) => {
 const notFound = (req, res) => {
   res.statusCode = 404;
   res.end("404 page not found");
+};
+
+const serverError = (req, res) => {
+  res.statusCode = 500;
+  res.end("500 server error");
+};
+
+// 3
+const urlMap = {
+  "/": (req, res) => res.end("HOME"),
+  "/user": user,
+  "/feed": feed,
 };
