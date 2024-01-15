@@ -1,61 +1,76 @@
 <h1>{{title}}</h1>
-<h2 class="text-xl">제목입니다.</h2>
-<div>
-  작성자 :<b>작성자 이름</b>
-</div>
-<div>
-  조회수 : 9999 | 작성일시 : 2023-01-14 00:00:00
-  <button onclick="modifyPost()">수정</button>
-  <button onclick="deletePost()">삭제</button>
-</div>
-
-<div>
-  <pre>본문입니다. 하잉~</pre>
-</div>
-
-<section>
+{{#with post}}
+  <!-- post 객체를 쉽게 사용하도록 with로 감싸기 -->
+  <h2 class="text-xl">{{title}}</h2>
+  <!-- 제목 -->
   <div>
-    <h3>3개의 댓글이 있습니다.</h3>
+    작성자 :<b>{{writer}}</b>
+    <!-- 작성자 -->
+  </div>
+  <div>
+    조회수 :
+    {{hits}}
+    | 작성일시 :
+    {{dateString createdDt}}
+    <!-- 조회수 및 작성일 -->
+    <button onclick="modifyPost()">수정</button>
+    <button onclick="deletePost()">삭제</button>
   </div>
 
-  <form method="post" action="/write-comment">
+  <div>
+    <pre>{{content}}</pre>
+    <!-- 본문 내용 -->
+  </div>
+
+  <section>
     <div>
+      <h3>{{lengthOfList comments}}개의 댓글이 있습니다.</h3>
+    </div>
+
+    <form method="post" action="/write-comment">
+      <input type="hidden" name="id" value="{{_id}}" />
       <div>
-        <input type="text" name="name" placeholder="이름" />
-        <input type="password" name="password" placeholder="비밀번호" />
+        <div>
+          <input type="text" name="name" placeholder="이름" />
+          <input type="password" name="password" placeholder="비밀번호" />
+        </div>
+        <div>
+          <textarea
+            cols="40"
+            rows="3"
+            name="comment"
+            placeholder="댓글을 입력해주세요."
+          ></textarea>
+          <br /><br /><button>댓글 쓰기</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    {{#each comments}}
+      <div>
+        <div>
+          작성자 :
+          <b>{{name}}</b>
+        </div>
+        <div>
+          작성일시 :
+          {{dateString createdDt}}
+          <button onclick="deleteComment('{{idx}}')">삭제</button>
+        </div>
       </div>
       <div>
-        <textarea
-          name="comment"
-          cols="40"
-          rows="3"
-          placeholder="댓글을 입력해주세요."
-        ></textarea>
-
-        <br /><br /><button>댓글 쓰기</button>
+        <pre>{{comment}}</pre>
       </div>
-    </div>
-  </form>
-</section>
-
-<section>
-  <div>
-    <div>
-      작성자 :
-      <b>댓글 작성자</b>
-    </div>
-    <div>
-      작성일시 : 2023-01-14 00:00:00
-      <button onclick="deleteComment('1')">삭제</button>
-    </div>
-  </div>
-  <div>
-    <pre>{{comment}}</pre>
-  </div>
-</section>
-
+    {{/each}}
+  </section>
+{{/with}}
 <footer>
   <div>
     <a href="/">목록으로</a>
   </div>
 </footer>
+<script>
+  async function modifyPost() { } async function deletePost() { }
+</script>
