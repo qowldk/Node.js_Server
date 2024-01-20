@@ -36,34 +36,8 @@ async function getDetailPost(collection, id) {
   );
 }
 
-async function getPostByIdAndPassword(collection, { id, password }) {
-  //  ❶ findOne() 함수 사용
-  return await collection.findOne(
-    { _id: ObjectId(id), password: password },
-    projectionOption
-  );
-}
-
-// ❷ id로 데이터 불러오기
-async function getPostById(collection, id) {
-  return await collection.findOne({ _id: ObjectId(id) }, projectionOption);
-}
-
-// ❸ 게시글 수정
-async function updatePost(collection, id, post) {
-  const toUpdatePost = {
-    $set: {
-      ...post,
-    },
-  };
-  return await collection.updateOne({ _id: ObjectId(id) }, toUpdatePost);
-}
-
 module.exports = {
   list,
   writePost,
   getDetailPost,
-  getPostById,
-  getPostByIdAndPassword,
-  updatePost,
 };
